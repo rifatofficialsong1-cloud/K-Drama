@@ -22,31 +22,36 @@
     <p>আপনার প্রিয় সব কে-ড্রামা এখন বাংলায়!</p>
 
     <div id="playerSection" class="video-container">
-        <video id="mainPlayer" controls poster="https://via.placeholder.com/700x400?text=K-Bangla+Streaming"></video>
+        <video id="mainPlayer" controls></video>
         <h3 id="videoTitle">ভিডিওর নাম</h3>
         <button class="btn" onclick="closePlayer()">বন্ধ করুন</button>
     </div>
 
     <div class="drama-grid">
-        <div class="card" onclick="loadVideo('BAACAgUAAxkBAAMEZaaKHoQrq71z73n-TMiuwD6dzT8AAucgAAKxu0hV7_KnsOS0R6A6BA', 'কে-ড্রামা - এপিসোড ০১')">
+        <div class="card" onclick="handleAdAndPlay('BAACAgUAAxkBAAMEZaaKHoQrq71z73n-TMiuwD6dzT8AAucgAAKxu0hV7_KnsOS0R6A6BA', 'কে-ড্রামা - এপিসোড ০১')">
             <img src="https://via.placeholder.com/150x200?text=Drama+1" alt="Poster">
             <p>এপিসোড ০১</p>
             <button class="btn">প্লে করুন</button>
         </div>
-        
-        </div>
+    </div>
 
     <script>
+        // এই ফাংশনটি প্রথমে অ্যাড দেখাবে তারপর ভিডিও লোড করবে
+        function handleAdAndPlay(fileId, title) {
+            // ১. অ্যাড ওপেন করা (স্মার্ট লিঙ্ক)
+            // নোট: সরাসরি window.open অনেক ব্রাউজারে ব্লক হয়, তাই ইউজার ক্লিক করার সাথে সাথেই এটি কাজ করবে।
+            window.open('https://www.highrevenuenetwork.com/your_link_id', '_blank'); 
+            
+            // ২. ভিডিও লোড করার মেইন ফাংশন কল করা
+            loadVideo(fileId, title);
+        }
+
         async function loadVideo(fileId, title) {
             const playerSection = document.getElementById('playerSection');
             const videoPlayer = document.getElementById('mainPlayer');
             const videoTitle = document.getElementById('videoTitle');
-
-            // লোডিং এলার্ট
-            console.log("ভিডিও লোড হচ্ছে...");
             
             try {
-                // আমাদের তৈরি করা API থেকে ভিডিওর লিঙ্ক আনা
                 const response = await fetch(`/api/get-video?fileId=${fileId}`);
                 const data = await response.json();
 
@@ -55,11 +60,12 @@
                     videoTitle.innerText = title;
                     playerSection.style.display = 'block';
                     window.scrollTo({ top: 0, behavior: 'smooth' });
+                    videoPlayer.play();
                 } else {
-                    alert("দুঃখিত! ভিডিওটি খুঁজে পাওয়া যায়নি।");
+                    alert("ভিডিওটি পাওয়া যায়নি।");
                 }
             } catch (error) {
-                alert("সার্ভার সমস্যা! আবার চেষ্টা করুন।");
+                alert("সার্ভার সমস্যা!");
             }
         }
 
@@ -71,4 +77,4 @@
         }
     </script>
 </body>
-              </html>
+</html>
